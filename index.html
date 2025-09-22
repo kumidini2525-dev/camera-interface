@@ -1,150 +1,120 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Cyber Security for Rural Digital Banking — Team Intro</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Webcam App</title>
   <style>
-    :root{
-      --bg:#0f1724;
-      --card:#0b1220;
-      --accent:#06b6d4;
-      --muted:#94a3b8;
-      --glass: rgba(255,255,255,0.03);
-      --shadow: 0 8px 30px rgba(2,6,23,0.6);
-      --radius:16px;
-      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      background: linear-gradient(180deg,#071029 0%, #081426 60%);
-      color:#e6eef6;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
 
-    .card{
-      width:100%;
-      max-width:960px;
-      background:linear-gradient(180deg,var(--card), #061423 60%);
-      border-radius:var(--radius);
-      padding:28px;
-      box-shadow:var(--shadow);
-      display:grid;
-      grid-template-columns: 1fr 360px;
-      gap:20px;
-      align-items:center;
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
     }
 
-    @media (max-width:880px){
-      .card{grid-template-columns: 1fr; padding:20px;}
+    video, img {
+      max-width: 100%;
+      border-radius: 6px;
+      margin-bottom: 15px;
     }
 
-    .left{
-      padding-right:8px;
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
     }
 
-    .title{
-      display:flex;
-      gap:14px;
-      align-items:center;
-    }
-    .logo{
-      width:68px;
-      height:68px;
-      border-radius:12px;
-      background:linear-gradient(135deg,var(--accent),#0ea5a4);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      box-shadow: 0 6px 20px rgba(6,182,212,0.15);
-      flex-shrink:0;
-    }
-    .logo svg{width:36px;height:36px;fill:white;opacity:.95}
-
-    h1{font-size:22px;margin:0 0 6px 0;line-height:1.05}
-    p.lead{margin:0;color:var(--muted);font-size:14px}
-
-    .meta{
-      margin-top:18px;
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-    .chip{
-      background:var(--glass);
-      padding:10px 12px;
-      border-radius:10px;
-      font-size:13px;
-      color: #cfe9f0;
-      border:1px solid rgba(255,255,255,0.03);
+    button:hover {
+      background: #0056b3;
     }
 
-    .members{
-      margin-top:20px;
-      display:grid;
-      gap:10px;
+    #error-message {
+      color: red;
+      margin-top: 15px;
     }
-    .member{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      padding:10px;
-      background:rgba(255,255,255,0.02);
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,0.02);
-    }
-    .avatar{
-      width:44px;height:44px;border-radius:8px;
-      background:linear-gradient(180deg,#0ea5a4,#38bdf8);
-      display:grid;place-items:center;font-weight:700;color:white;
-      font-size:16px;
-      flex-shrink:0;
-    }
-    .m-info{line-height:1}
-    .m-info .name{font-weight:600}
-    .m-info .role{font-size:13px;color:var(--muted)}
-
-    .right{
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-      padding:20px;border-radius:12px;
-      display:flex;flex-direction:column;gap:14px;align-items:center;
-      justify-content:center;
-    }
-    .college{font-size:14px;color:var(--muted);text-align:center}
-    .cta{
-      display:flex;
-      gap:12px;
-      margin-top:8px;
-    }
-    .btn{
-      background:var(--accent);
-      color:#042027;
-      font-weight:700;
-      padding:10px 16px;
-      border-radius:10px;
-      border:none;
-      cursor:pointer;
-      box-shadow:0 8px 18px rgba(6,182,212,0.12);
-    }
-    .btn.ghost{
-      background:transparent;
-      color:var(--muted);
-      border:1px solid rgba(255,255,255,0.04);
-    }
-
-    .footer-note{font-size:13px;color:var(--muted);text-align:center;padding-top:6px}
-
-    /* small helper */
-    .editable{outline: none; border-bottom:1px dashed rgba(255,255,255,0.03); padding:2px 4px}
   </style>
 </head>
 <body>
+  <div class="container">
+    <video id="video" autoplay playsinline></video>
+    <img id="photo" style="display:none;" alt="Captured Image" />
+    <canvas id="canvas" style="display:none;"></canvas>
 
-  <main class="card" role="main" aria-labelledby="topicT…
+    <button id="capture-btn">Take Photo</button>
+    <div id="error-message"></div>
+  </div>
+
+  <script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const photo = document.getElementById('photo');
+    const button = document.getElementById('capture-btn');
+    const errorMsg = document.getElementById('error-message');
+
+    let stream = null;
+    let isPhotoTaken = false;
+
+    async function initCamera() {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        errorMsg.textContent = '';
+      } catch (err) {
+        console.error(err);
+        if (err.name === 'NotAllowedError') {
+          errorMsg.textContent = 'Camera access denied. Please allow access and reload the page.';
+        } else if (err.name === 'NotFoundError') {
+          errorMsg.textContent = 'No camera device found.';
+        } else {
+          errorMsg.textContent = 'Camera error: ' + err.message;
+        }
+      }
+    }
+
+    button.addEventListener('click', () => {
+      if (!stream) return;
+
+      if (!isPhotoTaken) {
+        // Take photo
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        const dataURL = canvas.toDataURL('image/png');
+        photo.src = dataURL;
+        photo.style.display = 'block';
+        video.style.display = 'none';
+
+        button.textContent = 'Retake Photo';
+        isPhotoTaken = true;
+      } else {
+        // Retake photo
+        photo.style.display = 'none';
+        video.style.display = 'block';
+        button.textContent = 'Take Photo';
+        isPhotoTaken = false;
+      }
+    });
+
+    // Start camera on page load
+    window.addEventListener('load', initCamera);
+  </script>
+</body>
+</html>
