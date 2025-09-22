@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webcam Camera App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .camera-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #video-feed {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #000;
+            margin-bottom: 15px;
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+        }
+
+        #camera-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        #camera-button:hover {
+            background-color: #0056b3;
+        }
+
+        #captured-image {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #e9e9e9;
+            display: none; /* Initially hidden */
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="camera-container">
+        <!-- Live video feed from the camera -->
+        <video id="video-feed" autoplay playsinline></video>
+        
+        <!-- Button to take a photo -->
+        <button id="camera-button">Take Photo</button>
+
+        <!-- Hidden canvas for capturing the photo -->
+        <canvas id="canvas" style="display:none;"></canvas>
+
+        <!-- Displays the captured photo -->
+        <img id="captured-image" alt="Captured Photo">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const videoFeed = document.getElementById('video-feed');
+            const cameraButton = document.getElementById('camera-button');
+            const canvas = document.getElementById('canvas');
+            const capturedImage = document.getElementById('captured-image');
+            const context = canvas.getContext('2d');
+            let stream;
+
+            // Access the user's camera and display the stream
+            try {
+                // Request video stream from the user's device
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                videoFeed.srcObject = stream;
+            } catch (err) {
+                console.error("Error accessing the camera: ", err);
+                alert("Could not access the camera. Please ensure you have a camera connected and have given permission.");
+                return; // Stop execution if camera access fails
+            }
+
+            // Capture a photo when the button is clicked
+            cameraButton.addEventListener('click', () => {
+                // Ensure the canvas dimensions match the video
+                canvas.width = videoFeed.videoWidth;
+                canvas.height = videoFeed.videoHeight;
+                
+                // Draw the current video frame onto the canvas
+                context.drawImage(videoFeed, 0, 0, canvas.width, canvas.height);
+                
+                // Get the image data from the canvas as a base64 string
+                const photoDataUrl = canvas.toDataURL('image/png');
+                
+                // Display the captured image and hide the video feed
+                capturedImage.src = photoDataUrl;
+                capturedImage.style.display = 'block';
+                videoFeed.style.display = 'none';
+                
+                cameraButton.textContent = 'Take Another Photo';
+
+                // Optional: Save the photo (e.g., enable download)
+                // const link = document.createElement('a');
+                // link.href = photoDataUrl;
+                // link.download = 'captured-photo.png';
+                // link.click();
+            });
+        });
+    </script>
+
+</body>
+</html>
